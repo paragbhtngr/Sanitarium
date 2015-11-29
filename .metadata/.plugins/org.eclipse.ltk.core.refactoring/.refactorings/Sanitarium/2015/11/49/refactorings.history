@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename package &apos;dev.codenmore&apos; to &apos;dev.sanitarium&apos;&#x0D;&#x0A;- Original project: &apos;Sanitarium&apos;&#x0D;&#x0A;- Original element: &apos;Sanitarium/src/dev.codenmore&apos;&#x0D;&#x0A;- Renamed element: &apos;Sanitarium/src/dev.sanitarium&apos;&#x0D;&#x0A;- Update references to refactored element&#x0D;&#x0A;- Update fully qualified names in &apos;*&apos; files&#x0D;&#x0A;- Update textual occurrences in comments and strings&#x0D;&#x0A;- Rename subpackages of the package" description="Rename package &apos;dev.codenmore&apos;" flags="589830" hierarchical="true" id="org.eclipse.jdt.ui.rename.package" input="/src&lt;dev.codenmore" name="dev.sanitarium" patterns="*" qualified="true" references="true" stamp="1448817870863" textual="true" version="1.0"/>
+</session>

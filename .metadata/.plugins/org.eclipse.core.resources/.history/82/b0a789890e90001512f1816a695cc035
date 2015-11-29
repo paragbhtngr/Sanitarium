@@ -1,0 +1,45 @@
+package advAlgAss2;
+
+import java.awt.Color;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
+
+import javax.imageio.ImageIO;
+
+
+public class Simplex {
+
+	public static final Color FOREGROUND_COL = new Color(255,255,0); // YELLOW
+	public static final Color BACKGROUND_COL = new Color(0,0,255); // BLUE
+
+	public static final double LAMBDA = 1;
+
+	public static int[][] img2matrix(BufferedImage bi){
+		int[][] C = new int [][];
+		for(int i=0;i<bi.getHeight();i++) 
+		{
+			for(int j=0;j<bi.getWidth();j++)
+			{
+				C[i][j] = bi.getRGB(i, j);
+			}
+		}
+
+		return C;
+	} 
+
+	public int getDistance(int pixel, int ind) {
+		return Math.abs(pixel - ind);
+	}    
+    
+	public static void main(String[]args){
+		BufferedImage img = null;
+		try {
+		    img = ImageIO.read(new File("D:/code/bayes_in.jpg"));
+		} catch (IOException e) {
+		}
+		
+		int[][] dMat = img2matrix(img);
+	}
+}

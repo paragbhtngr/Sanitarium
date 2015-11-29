@@ -1,0 +1,29 @@
+package advAlgAss2;
+
+import java.awt.Color;
+import java.awt.image.BufferedImage;
+import java.util.*;
+
+
+public class Simplex {
+	
+	public static final Color FOREGROUND_COL = new Color(255,255,0); // YELLOW
+	public static final Color BACKGROUND_COL = new Color(0,0,255); // BLUE
+	
+	  public int[][] img2matriz(BufferedImage bi){
+		    int[][] C = null;
+		    for(int i=0;i<bi.getHeight();i++) 
+		    {
+		        for(int j=0;j<bi.getWidth();j++)
+		        {
+		        	C[i][j] = bi.getRGB(i, j);
+		        }
+		    }
+		    
+		    int C;
+		} 
+	
+	public double getDistance(double pixel, double ind) {
+		double dist;
+	}
+}

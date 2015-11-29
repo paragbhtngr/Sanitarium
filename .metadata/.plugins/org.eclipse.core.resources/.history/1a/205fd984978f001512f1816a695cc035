@@ -1,0 +1,25 @@
+package advAlgAss2;
+
+import java.awt.image.BufferedImage;
+import java.util.*;
+
+
+public class Simplex {
+	
+	  public double[][] img2matriz(BufferedImage bi){
+		    double[][] C = null;
+		    for(int i=0;i<bi.getHeight();i++) 
+		    {
+		        for(int j=0;j<bi.getWidth();j++)
+		        {
+		        	C[i][j] = bi.getRGB(i, j);
+		        }
+		    }
+		    
+		    return C;
+		} 
+	
+	public double getDistance(double pixel, double ind) {
+		double dist;
+	}
+}
