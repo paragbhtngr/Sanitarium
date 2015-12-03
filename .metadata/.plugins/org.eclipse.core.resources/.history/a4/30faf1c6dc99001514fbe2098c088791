@@ -1,0 +1,173 @@
+package display;
+
+import java.io.File;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
+import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import game.Game;
+
+public class XMLParser {
+	
+	Game game;
+	
+	public static void savetoXML(Game game){
+		try {
+	         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+	         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+	         Document doc = dBuilder.newDocument();
+	         
+	         // root element
+	         Element rootElement = doc.createElement("map_elements");
+	         doc.appendChild(rootElement);
+	         
+	         // Store the player's stats and position
+	         Element player = doc.createElement("player");
+	         
+	         Attr name = doc.createAttribute("name"); 					name.setValue(game.p.getName());
+	         Attr maxHealth = doc.createAttribute("max_health"); 		maxHealth.setValue(Integer.toString(game.p.getMaxHealth()));
+	         Attr health = doc.createAttribute("health");				health.setValue(Integer.toString(game.p.getHealth()));
+	         Attr attack = doc.createAttribute("attack");				attack.setValue(Integer.toString(game.p.getAttack()));
+	         Attr mana = doc.createAttribute("mana");					mana.setValue(Integer.toString(game.p.getMana()));
+	         Attr potions = doc.createAttribute("potions");				potions.setValue(Integer.toString(game.p.getPotions()));
+	         
+	         Attr playerX = doc.createAttribute("x_val");				playerX.setValue(Integer.toString((int)game.p.getX()));
+	         Attr playerY = doc.createAttribute("y_val");				playerY.setValue(Integer.toString((int)game.p.getY()));
+	         
+	         player.setAttributeNode(name);
+	         player.setAttributeNode(maxHealth);
+	         player.setAttributeNode(health);
+	         player.setAttributeNode(attack);
+	         player.setAttributeNode(mana);
+	         player.setAttributeNode(potions);
+	         player.setAttributeNode(playerX);
+	         player.setAttributeNode(playerY);
+	         
+	         //potion list
+	         Element potionList = doc.createElement("potion_list");
+	         rootElement.appendChild(potionList);
+	         //  potion element
+	         for(int i=0;i<game.potionList.size();i++){
+	        	 Element potion = doc.createElement("potion");
+		         potionList.appendChild(potion);
+
+		         // setting x and y values for potion
+		         Attr potionX = doc.createAttribute("x_val"); 			potionX.setValue(Integer.toString(game.potionList.get(i).getX()));
+		         Attr potionY = doc.createAttribute("y_val");			potionY.setValue(Integer.toString(game.potionList.get(i).getY()));
+		         
+		         potion.setAttributeNode(potionX);
+		         potion.setAttributeNode(potionY);	 
+	         }
+	         
+	         //patrol enemy list
+	         Element patrolList = doc.createElement("patrol_enemy_list");
+	         rootElement.appendChild(patrolList);
+	         //  patrol enemy element
+	         for(int i=0;i<game.patrolList.size();i++){
+	        	 Element patrol = doc.createElement("patrol_enemy");
+		         patrolList.appendChild(patrol);
+
+		         // setting attribute values for patrol enemy
+		         Attr patrolHealth = doc.createAttribute("health");		patrolHealth.setValue(Integer.toString(game.patrolList.get(i).getHealth()));
+		         Attr patrolDir = doc.createAttribute("is_LR");			patrolDir.setValue(Boolean.toString(game.patrolList.get(i).isLRPatrol()));
+		         
+		         Attr patrolX = doc.createAttribute("x_val"); 			patrolX.setValue(Integer.toString((int)game.patrolList.get(i).getX()));
+		         Attr patrolY = doc.createAttribute("y_val");			patrolY.setValue(Integer.toString((int)game.patrolList.get(i).getY()));
+		         
+		         patrol.setAttributeNode(patrolHealth);
+		         patrol.setAttributeNode(patrolDir);
+		         patrol.setAttributeNode(patrolX);
+		         patrol.setAttributeNode(patrolY);	 
+	         }
+	         
+	       //wandering enemy list
+	         Element wanderList = doc.createElement("wandering_enemy_list");
+	         rootElement.appendChild(wanderList);
+	         //  wandering enemy element
+	         for(int i=0;i<game.wanderList.size();i++){
+	        	 Element wander = doc.createElement("wandering_enemy");
+		         wanderList.appendChild(wander);
+
+		         // setting attribute values for wandering enemy
+		         Attr wanderHealth = doc.createAttribute("health");		wanderHealth.setValue(Integer.toString(game.wanderList.get(i).getHealth()));	         
+		         Attr wanderX = doc.createAttribute("x_val"); 			wanderX.setValue(Integer.toString((int)game.wanderList.get(i).getX()));
+		         Attr wanderY = doc.createAttribute("y_val");			wanderY.setValue(Integer.toString((int)game.wanderList.get(i).getY()));
+		         
+		         wander.setAttributeNode(wanderHealth);
+		         wander.setAttributeNode(wanderX);
+		         wander.setAttributeNode(wanderY);	 
+	         }
+
+
+	         // write the content into xml file
+	         TransformerFactory transformerFactory = TransformerFactory.newInstance();
+	         Transformer transformer = transformerFactory.newTransformer();
+	         DOMSource source = new DOMSource(doc);
+	         StreamResult result = new StreamResult(new File("./res/test.xml"));
+	         transformer.transform(source, result);
+	         // Output to console for testing
+	         StreamResult consoleResult =
+	         new StreamResult(System.out);
+	         transformer.transform(source, consoleResult);
+	      } catch (Exception e) {
+	         e.printStackTrace();
+	      }
+	}
+	
+	public static void parseFromXML(String input){
+		try {	
+	         File inputFile = new File(input);
+	         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+	         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+	         Document doc = dBuilder.parse(inputFile);
+	         doc.getDocumentElement().normalize();
+	         
+	         System.out.println("Root element :" 
+	            + doc.getDocumentElement().getNodeName());
+	         NodeList nList = doc.getElementsByTagName("student");
+	         System.out.println("----------------------------");
+	         for (int temp = 0; temp < nList.getLength(); temp++) {
+	            Node nNode = nList.item(temp);
+	            System.out.println("\nCurrent Element :" 
+	               + nNode.getNodeName());
+	            if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+	               Element eElement = (Element) nNode;
+	               System.out.println("Student roll no : " 
+	                  + eElement.getAttribute("rollno"));
+	               System.out.println("First Name : " 
+	                  + eElement
+	                  .getElementsByTagName("firstname")
+	                  .item(0)
+	                  .getTextContent());
+	               System.out.println("Last Name : " 
+	               + eElement
+	                  .getElementsByTagName("lastname")
+	                  .item(0)
+	                  .getTextContent());
+	               System.out.println("Nick Name : " 
+	               + eElement
+	                  .getElementsByTagName("nickname")
+	                  .item(0)
+	                  .getTextContent());
+	               System.out.println("Marks : " 
+	               + eElement
+	                  .getElementsByTagName("marks")
+	                  .item(0)
+	                  .getTextContent());
+	            }
+	         }
+	      } catch (Exception e) {
+	         e.printStackTrace();
+	      }
+	}
+}

@@ -1,0 +1,21 @@
+package game;
+
+import java.awt.Graphics;
+
+import state.State;
+
+public class MenuState extends State {
+	
+	public MenuState(){
+		
+	}
+
+	@Override
+	public void tick() {
+	}
+
+	@Override
+	public void render(Graphics g) {
+	}
+
+}

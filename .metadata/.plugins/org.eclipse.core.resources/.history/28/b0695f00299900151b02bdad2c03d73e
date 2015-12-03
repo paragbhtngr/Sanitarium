@@ -1,0 +1,31 @@
+package entities.creatures;
+
+import java.awt.Graphics;
+
+import game.Game;
+
+public class Player extends Creature{
+	
+	private Game game;
+	
+	public Player(Game game, int x, int y) {
+		super(x, y);
+		this.game = game;
+		// TODO Auto-generated constructor stub
+	}
+
+	@Override
+	public void tick() {
+		if(game.getKeyManager().up){ y--;}
+		if(game.getKeyManager().down){ y++;}
+		if(game.getKeyManager().left){ x--;}
+		if(game.getKeyManager().right){ x++;}
+	}
+
+	@Override
+	public void render(Graphics g) {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

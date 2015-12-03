@@ -1,0 +1,100 @@
+package entities.creatures;
+
+import java.awt.Graphics;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+
+import game.Game;
+
+public class Player extends Creature{
+	
+	private Game game;
+	private int attack, mana;
+	
+	
+	public Player(Game game, int x, int y) {
+		super(x, y);
+		this.game = game;
+	}
+	
+	public void setHealth(int x){ super.health = x; }
+	public void setAttack(int x){ this.attack = x; }
+	public void setMana(int x){ this.attack = x; }
+	
+	public int getHealth(){ return super.health; }
+	public int getAttack(){ return this.attack; }
+	public int getMana(){ return this.attack; }
+
+	private void getPlayerInfo(String path) {
+		String line = null;
+		
+		try {
+            // FileReader reads text files in the default encoding.
+            FileReader fileReader = 
+                new FileReader(path);
+
+            BufferedReader bufferedReader = 
+                new BufferedReader(fileReader);
+
+            while((line = bufferedReader.readLine()) != null) {
+                System.out.println(line);
+            }   
+
+            // Always close files.
+            bufferedReader.close();         
+        }
+        catch(FileNotFoundException ex) {
+            System.out.println(
+                "Unable to open file '" + 
+                path + "'");                
+        }
+        catch(IOException ex) {
+            System.out.println(
+                "Error reading file '" 
+                + path + "'");                  
+            // Or we could just do this: 
+            // ex.printStackTrace();
+        }
+	}
+
+	@Override
+	public void tick() {
+		if(game.getKeyManager().up){ pMoveUp();}
+		if(game.getKeyManager().down){ pMoveDown();}
+		if(game.getKeyManager().left){ pMoveLeft();}
+		if(game.getKeyManager().right){ pMoveRight();}
+	}
+
+	private void pMoveRight() {
+		if(game.map[(int) y][(int) (x+0.5)] != '#'){
+			x = x + 0.5;	
+		}
+	}
+
+	private void pMoveLeft() {
+		if(game.map[(int) y][(int) (x-0.5)] != '#'){
+			x = x - 0.5;	
+		}
+	}
+
+	private void pMoveDown() {
+		if(game.map[(int) (y+0.3)][(int) (x)] != '#'){
+			y = y + 0.3;	
+		}
+	}
+
+	private void pMoveUp() {
+		if(game.map[(int) (y-0.3)][(int) (x)] != '#'){
+			y = y - 0.3;	
+		}
+	}
+
+	@Override
+	public void render(Graphics g) {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

@@ -1,0 +1,16 @@
+package entities.creatures;
+
+public class PatrolEnemy extends Creature{
+
+	public PatrolEnemy(int x, int y) {
+		super(x, y);
+		// TODO Auto-generated constructor stub
+	}
+
+	@Override
+	public void tick() {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

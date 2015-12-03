@@ -1,0 +1,88 @@
+package game;
+
+import java.awt.Graphics;
+import java.awt.image.BufferStrategy;
+
+import display.Display;
+
+public class Game implements Runnable{
+	
+	private Display display;
+	public int width, height;
+	public String title;
+
+	private Thread thread;
+	private boolean isRunning = false;
+	
+	private BufferStrategy bs;
+	private Graphics g;
+	
+	public Game(String title, int width, int height) {
+		this.width = width;
+		this.height = height;
+		this.title = title;
+	}
+	
+	public void run(){
+		init();
+		
+		while(isRunning){
+			tick();
+			render();
+		}
+		
+		stop();
+	}
+	
+	private void init(){
+		display = new Display(title, width, height);
+	}
+	
+	private void tick(){
+		
+	}
+	private void render(){
+		bs = display.getCanvas().getBufferStrategy();
+		if(bs == null){ // canvas has no buffer strategy
+			display.getCanvas().createBufferStrategy(3); 
+			//3 buffers are sufficient for this purpose
+			return;
+		}
+		g = bs.getDrawGraphics();
+		// Start drawing to screen
+//		
+//		g.fillRect(0, 0, width, height);
+		char [] rgc = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j' };
+		   g.drawChars(rgc, 0, 5, 25, 25);
+		   g.drawChars(rgc, 5, 5, 25, 50);
+		
+		// End drawing
+		bs.show();
+		g.dispose();
+	}
+	
+	public synchronized void start(){
+		if(isRunning){
+			return;
+		}
+		else{
+			isRunning = true;
+			thread = new Thread(this);
+			thread.start();
+		}
+	}
+	
+	public synchronized void stop(){
+		if(!isRunning){
+			return;
+		}
+		else{
+			try {
+				thread.join();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}	
+		}
+	}
+
+}

@@ -1,0 +1,16 @@
+package display;
+
+public class Output {
+	private static int w = 135;
+	private static char[][] header = new char[w][7];
+	private static char[][] map = new char[w][30];
+	private static char[][] console = new char[w][10];
+	
+	public static void init_header(){
+		for(int i=0; i<w;i++){
+			for(int j=0; j<7;j++){
+				header[i][j] = ' ';
+			}	
+		}
+	}
+}

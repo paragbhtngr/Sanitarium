@@ -1,0 +1,5 @@
+package display;
+
+public class Output {
+	private char[][] header = new char[135][7];  
+}

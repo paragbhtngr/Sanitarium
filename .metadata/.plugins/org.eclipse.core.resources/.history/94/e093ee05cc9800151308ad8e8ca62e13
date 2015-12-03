@@ -1,0 +1,25 @@
+package display;
+
+import java.awt.Dimension;
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+
+public class Window {
+	private static final int WIDTH = 640;
+	private static final int HEIGHT = 480;
+	public static void main(String[] args) {
+        EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                JFrame f = new JFrame();
+                f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                f.setSize(WIDTH, HEIGHT);
+                f.setMinimumSize(new Dimension(WIDTH, HEIGHT));
+                f.setMaximumSize(new Dimension(WIDTH, HEIGHT));
+                f.setPreferredSize(new Dimension(WIDTH, HEIGHT));
+                f.setVisible(true);
+            }
+        });
+    }
+}

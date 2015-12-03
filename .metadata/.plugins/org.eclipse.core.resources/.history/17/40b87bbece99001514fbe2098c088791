@@ -1,0 +1,23 @@
+package entities;
+
+import game.Game;
+
+public class Potion extends Entity {
+	
+	private Game game;
+	private char ch = 'P'; //
+	private int x,y;
+	
+	public Potion(Game game, int x, int y){
+		this.game = game;
+		this.x = x;
+		this.y = y;
+	}
+
+	@Override
+	public void tick() {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

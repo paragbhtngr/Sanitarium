@@ -1,0 +1,227 @@
+package display;
+
+import java.awt.Graphics;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ListIterator;
+
+import entities.creatures.Player;
+import game.Game;
+
+public class Output {
+
+	private Game game;
+	public int level = 1;
+
+	private int w = 153;
+	private char[][] header = new char[7][w];
+	private char[][] map = new char[30][w];
+	private char[][] console = new char[10][w];
+
+	Player p;
+	int smashDelay = 0;
+	int throwDelay = 0;
+
+	Graphics g;
+
+	public Output(Game g){
+		this.game = g;
+	}
+
+	public void setPlayer(Player player){
+		p = player;
+	}
+
+	public void setGraphics(Graphics graphics){
+		g = graphics;
+	}
+
+	public void init_header(){
+
+		// First setting up the blank space
+		for(int i=0; i<7;i++){
+			for(int j=0; j<this.w;j++){
+				this.header[i][j] = ' ';
+			}	
+		}
+
+		// Print Level Number
+		for(int i= (this.w/2 - 3);i<=(this.w/2 + 3); i++){
+			this.header[1][i] = ("Level "+this.level).charAt(i - (this.w/2 - 3));
+		}
+
+		//Print Player details
+		printHealth();
+		printPotions();
+
+
+	}
+
+	private void printHealth() {
+		String HPString = "HP: |____________________| 000";
+		for(int i=0;i<(HPString.length()); i++){
+			this.header[3][i] = (HPString).charAt(i);
+		}
+		for(int i=5;i<(p.getHealth()*20/p.getMaxHealth()+5);i++){
+			this.header[3][i] = '#';
+		}
+		String printHealth = Integer.toString(p.getHealth());
+		if(p.getHealth() < 100){ printHealth = "0" + printHealth;}
+		System.out.println(printHealth);
+		for(int i=(HPString.length()-3);i<(HPString.length()); i++){
+			this.header[3][i] = (printHealth).charAt(i - (HPString.length()-3));
+		}
+	}
+
+	private void printPotions() {
+		String potionsString = "Potions: 00";
+		for(int i=0;i<(potionsString.length()); i++){
+			this.header[5][i] = (potionsString).charAt(i);
+		}
+		String printPotions = Integer.toString(p.getPotions());
+		if(p.getPotions() < 10){ printPotions = "0" + printPotions;}
+		System.out.println(printPotions);
+		for(int i=(potionsString.length()-2);i<(potionsString.length()); i++){
+			this.header[5][i] = (printPotions).charAt(i - (potionsString.length()-2));
+		}
+	}
+
+	public void renderHeader(){
+		for(int i=0; i<7;i++) {
+			this.g.drawChars(this.header[i], 0, (this.header[i].length - 1), 24, (i+1)*15);
+		}
+	}
+
+	public void setMap(String path){
+		String line = null;
+		FileReader fileReader;
+		try {
+			fileReader = new FileReader(path);
+
+			BufferedReader bufferedReader = new BufferedReader(fileReader);
+
+			for(int i=0; i<30;i++){ //row
+				line = bufferedReader.readLine();
+				for(int j=0; j<this.w;j++){ //column
+					map[i][j] = line.charAt(j);
+				}
+			}
+
+			// Always close files.
+			bufferedReader.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}    
+	}
+
+	public char[][] getMap(){
+		return this.map;
+	}
+	public void renderMap(){
+		char[][] renderMap = this.map;
+
+		// Render attack effects on map
+		if(smashDelay <=0){
+			if(game.getKeyManager().smash){
+				updateChar(renderMap, (int) p.getY() + 1, (int) p.getX(), '*');
+				updateChar(renderMap, (int) p.getY() - 1, (int) p.getX(), '*');
+				updateChar(renderMap, (int) p.getY(), (int) p.getX() + 1, '*');
+				updateChar(renderMap, (int) p.getY(), (int) p.getX() - 1, '*');
+				updateChar(renderMap, (int) p.getY() + 1, (int) p.getX() + 1, '*');
+				updateChar(renderMap, (int) p.getY() + 1, (int) p.getX() - 1, '*');
+				updateChar(renderMap, (int) p.getY() - 1, (int) p.getX() + 1, '*');
+				updateChar(renderMap, (int) p.getY() - 1, (int) p.getX() - 1, '*');	
+				smashDelay = 10;
+			}
+		}
+
+
+		if(throwDelay == 0){
+			if(game.getKeyManager().throwUp){
+				game.arrowList.add(new Arrow(8, (int) p.getY(), (int) p.getX()));
+				throwDelay = 10;
+			}
+			if(game.getKeyManager().throwDown){
+				game.arrowList.add(new Arrow(2, (int) p.getY(), (int) p.getX()));
+				throwDelay = 10;
+			}
+			if(game.getKeyManager().throwLeft){
+				game.arrowList.add(new Arrow(4, (int) p.getY(), (int) p.getX()));
+				throwDelay = 10;
+			}
+			if(game.getKeyManager().throwRight){
+				game.arrowList.add(new Arrow(6, (int) p.getY(), (int) p.getX()));
+				throwDelay = 10;
+			}	
+		}
+		
+		List<Arrow> renderArrowList = game.arrowList;
+		for(Arrow i:game.arrowList){
+			i.step();
+			checkCollision(renderMap, renderArrowList, i);
+		}
+		
+		for(Arrow i:renderArrowList){
+			updateChar(renderMap, i.getY(), i.getX(), i.getCh());
+		}
+		
+//		ListIterator<Arrow> it = game.arrowList.listIterator();    
+//		if(it.hasNext()) {  
+//			Arrow i = it.next();
+//			i.step();
+//			checkCollision(renderMap,i);
+//			updateChar(renderMap, i.getY(), i.getX(), i.getCh());
+//		}  
+
+		// Draw player
+		renderMap[(int) p.getY()][(int) p.getX()] = '@';
+
+		for(int i=0; i<30;i++) {
+			this.g.drawChars(renderMap[i], 0, (renderMap[i].length - 1), 24, (i+9)*15);
+		}
+
+		if(smashDelay > 0) smashDelay--;
+		if(throwDelay > 0) throwDelay--;
+
+
+	}
+
+	private void checkCollision(char[][] renderMap, List<Arrow> renderArrowList, Arrow i) {
+		if(renderMap[i.getY()][i.getX()] == '#'){
+			renderArrowList.remove(i); // Arrow hit a wall
+		}
+		int arrowCount = 0;
+
+		ListIterator<Arrow> it = game.arrowList.listIterator();    
+		if(it.hasNext()) {  
+			Arrow x = it.next();
+			if(x.getX() == i.getX() && x.getY() == i.getY()){
+				arrowCount++; // count arrows occupying same pos
+				if(arrowCount>1){
+					game.arrowList.remove(x); // arrows cancel out
+				}
+			}
+		}  
+
+		if(arrowCount > 1){
+			game.arrowList.remove(i); // remove the original arrow
+		}
+
+		// If arrow hit a target
+	}
+
+	private void updateChar(char[][] renderMap, int y, int x, char c) {
+		if(renderMap[y][x] != '#'){
+			renderMap[y][x] = c;			
+		}
+	}
+
+}

@@ -1,0 +1,53 @@
+package display;
+
+import java.awt.Graphics;
+
+import entities.creatures.Player;
+
+public class Output {
+	
+	public int level = 0;
+	
+	private int w = 155;
+	private char[][] header = new char[7][w];
+	private char[][] map = new char[30][w];
+	private char[][] console = new char[10][w];
+	
+	Player p;
+	
+	Graphics g;
+	
+	public Output(){
+		}
+	
+	public void setPlayer(Player player){
+		p = player;
+	}
+	
+	public void setGraphics(Graphics graphics){
+		g = graphics;
+	}
+	
+	public void init_header(){
+
+		// First setting up the blank space
+		for(int i=0; i<7;i++){
+			for(int j=0; j<this.w;j++){
+				this.header[i][j] = ' ';
+			}	
+		}
+		
+		for(int i= (this.w/2 - 3);i<=(this.w/2 + 3); i++){
+			this.header[1][i] = ("Level "+this.level).charAt(i - (this.w/2 - 3));
+//			this.header[1][i] = ("Level "+this.level).charAt(i);
+		}
+		
+		
+	}
+	
+	public void renderHeader(){
+		for(int i=0; i<7;i++) {
+			this.g.drawChars(this.header[i], 0, (this.header[i].length - 1), 24, (i+1)*15);
+		}
+	}
+}

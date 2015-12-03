@@ -1,0 +1,23 @@
+package entities.creatures;
+
+import game.Game;
+
+public class PatrolEnemy extends Creature{
+	
+	private Game game;
+	private int direction;
+	private char c = '!';
+	
+	public PatrolEnemy(Game game, int x, int y, int direction) {	
+		super(x, y);
+		this.direction = direction;
+		this.game = game;
+	}
+
+	@Override
+	public void tick() {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

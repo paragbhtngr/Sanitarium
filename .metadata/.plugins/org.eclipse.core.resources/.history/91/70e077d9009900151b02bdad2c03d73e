@@ -1,0 +1,24 @@
+package state;
+
+import java.awt.Graphics;
+
+import entities.creatures.Player;
+
+public class GameState extends State{
+	
+	private Player player;
+	
+	public GameState(){
+		player = new Player(0,0);
+	}
+		
+	@Override
+	public void tick() {		
+	}
+
+	@Override
+	public void render(Graphics g) {
+		player.render(g);
+	}
+	
+}

@@ -1,0 +1,126 @@
+package game;
+
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.image.BufferStrategy;
+
+import display.Display;
+
+public class Game implements Runnable{
+	
+	private Display display;
+	public int width, height;
+	public String title;
+
+	private Thread thread;
+	private boolean isRunning = false;
+	
+	private BufferStrategy bs;
+	private Graphics g;
+	
+	public Game(String title, int width, int height) {
+		this.width = width;
+		this.height = height;
+		this.title = title;
+	}
+	
+	public void run(){
+		init();
+		
+		int fps = 30; // Sets a constant fps for the game 
+		// regardless of computer processing speed
+		
+		double timePerTick = 1000000000/fps;
+		double delta = 0;
+		long now;
+		long lastTime = System.nanoTime();
+		
+		long timer = 0;
+		int ticks = 0;
+		
+		while(isRunning){
+			now = System.nanoTime();
+			delta += (now - lastTime) / timePerTick; 
+			timer += now - lastTime;
+			lastTime = now;
+			
+			if(delta >= 1){
+				tick();
+				render();
+				ticks++;
+				delta--;
+			}
+			
+			if(timer >= 1000000000){
+				System.out.println("Ticks:" + ticks);
+				ticks = 0;
+				timer = 0;
+			}
+		}
+		
+		stop();
+	}
+	
+	private void init(){
+		display = new Display(title, width, height);
+	}
+	
+	private void tick(){
+		
+	}
+	
+	/**
+	 * Renders the output and displays it in the JFrame
+	 */
+	private void render(){
+		bs = display.getCanvas().getBufferStrategy();
+		if(bs == null){ // canvas has no buffer strategy
+			display.getCanvas().createBufferStrategy(3); 
+			//3 buffers are sufficient for this purpose
+			return;
+		}
+		g = bs.getDrawGraphics();
+		// Clear screen
+		g.clearRect(0, 0, width, height);
+		// Start drawing to screen
+		
+//		g.setColor(Color.BLACK);
+//		g.fillRect(0, 0, width, height);
+		
+		Font font = new Font("Consolas", Font.PLAIN, 15);
+		g.setFont(font );
+		char [] rgc = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j' };
+		   g.drawChars(rgc, 0, 5, 25, 25);
+		   g.drawChars(rgc, 5, 5, 25, 40);
+		
+		// End drawing
+		bs.show();
+		g.dispose();
+	}
+	
+	public synchronized void start(){
+		if(isRunning){
+			return;
+		}
+		else{
+			isRunning = true;
+			thread = new Thread(this);
+			thread.start();
+		}
+	}
+	
+	public synchronized void stop(){
+		if(!isRunning){
+			return;
+		}
+		else{
+			try {
+				thread.join();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}	
+		}
+	}
+
+}

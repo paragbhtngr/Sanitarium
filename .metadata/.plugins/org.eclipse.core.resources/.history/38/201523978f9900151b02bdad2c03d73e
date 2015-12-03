@@ -1,0 +1,10 @@
+package display;
+
+public class Arrow {
+	private char ch; //
+	int direction; //using numpad as reference for directions
+	int x, y;
+	
+	
+	
+}

@@ -1,0 +1,9 @@
+package display;
+
+public class Output {
+	private char[][] header = new char[135][7];
+	private char[][] map = new char[135][30];
+	private char[][] console = new char[135][10];
+	
+	init_header
+}

@@ -1,0 +1,24 @@
+1449042797258	Delete element
+1449042808566	Delete elements
+1449043774523	Delete element
+1449043778501	Delete element
+1449044069204	Rename type 'Game'
+1449044580540	Delete element
+1449044614003	Copy package
+1449044619553	Delete element
+1449065670773	Move compilation unit
+1449065977053	Delete element
+1449067225891	Move compilation unit
+1449084172993	Delete element
+1449089060026	Extract method 'pMoveUp'
+1449089092136	Extract method 'pMoveDown'
+1449089107611	Extract method 'pMoveLeft'
+1449089129982	Extract method 'pMoveRight'
+1449089407808	Rename method 'getMap'
+1449117466892	Extract method 'printHealth'
+1449122845058	Extract method 'updateChar'
+1449132130532	Extract method 'updateArrowList'
+1449132345823	Extract method 'renderSmash'
+1449132733469	Extract method 'renderThrow'
+1449134797243	Move compilation unit
+1449153134319	Extract method 'renderThrowHelp'

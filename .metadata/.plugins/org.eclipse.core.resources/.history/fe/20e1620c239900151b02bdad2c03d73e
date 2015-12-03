@@ -1,0 +1,39 @@
+package display;
+
+import java.awt.Graphics;
+
+public class Output {
+	
+	public static int level = 0;
+	
+	
+	private static int w = 135;
+	private static char[][] header = new char[7][w];
+	private static char[][] map = new char[30][w];
+	private static char[][] console = new char[10][w];
+	
+	public Output(){
+		
+	}
+	
+	public static void init_header(){
+		// First setting up the blank space
+		for(int i=0; i<7;i++){
+			for(int j=0; j<w;j++){
+				header[i][j] = ' ';
+			}	
+		}
+		
+		for(int i= (w/2 - 3);i<(w/2 + 4); i++){
+			header[2][i] = ("Level "+level).charAt(i);
+		}
+		
+		
+	}
+	
+	public void renderHeader(Graphics g){
+		for(int i=0; i<7;i++) {
+			g.drawChars(header[i], 0, (header[i].length - 1), 25, (i+1)*15);
+		}
+	}
+}
