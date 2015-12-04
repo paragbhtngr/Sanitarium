@@ -5,7 +5,7 @@ import game.Game;
 public class PatrolEnemy extends Creature{
 	
 	private Game game;
-	private boolean isLRPatrol; // is patrol up-down or left-right?
+	private boolean isLRPatrol = true; // is patrol up-down or left-right?
 	private boolean isPosDir = true;
 	private char c = '!';
 	

@@ -1,0 +1,191 @@
+package game;
+
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.image.BufferStrategy;
+import java.util.ArrayList;
+import java.util.List;
+
+import display.Display;
+import display.Output;
+import entities.Arrow;
+import entities.Potion;
+import entities.creatures.FiringEnemy;
+import entities.creatures.PatrolEnemy;
+import entities.creatures.Player;
+import entities.creatures.WanderingEnemy;
+import input.KeyManager;
+
+
+
+public class Game implements Runnable{
+	
+	
+	int count = 0;
+	
+	private Display display;
+	public int width, height;
+	public String title;
+	public Output output;
+	public FileIO fileIO;
+	
+	public Player p;
+	public int playerInitX = 3;
+	public int playerInitY = 3;
+	
+	public int level = 0;
+	
+	public List<Arrow> arrowList = new ArrayList<Arrow>();
+	public List<Potion> potionList = new ArrayList<Potion>();
+	public List<PatrolEnemy> patrolList = new ArrayList<PatrolEnemy>();
+	public List<WanderingEnemy> wanderList = new ArrayList<WanderingEnemy>();
+	public List<FiringEnemy> firingList = new ArrayList<FiringEnemy>();
+
+	private Thread thread;
+	private boolean isRunning = false;
+
+	private BufferStrategy bs;
+	private Graphics g;
+	
+	// Input
+	private KeyManager keyManager;
+	
+	public Game(String title, int width, int height) {
+		this.width = width;
+		this.height = height;
+		this.title = title;
+		keyManager = new KeyManager();
+	}
+
+	public void run(){
+		init();
+
+		int fps = 25; // Sets a constant fps for the game regardless of computer processing speed
+
+		double timePerTick = 1000000000/fps;
+		double delta = 0;
+		long now;
+		long lastTime = System.nanoTime();
+
+		long timer = 0;
+		int ticks = 0;
+
+		while(isRunning){
+			now = System.nanoTime();
+			delta += (now - lastTime) / timePerTick; 
+			timer += now - lastTime;
+			lastTime = now;
+
+			if(delta >= 1){
+				tick();
+				render();
+				ticks++;
+				delta--;
+			}
+
+			if(timer >= 1000000000){
+				System.out.println("Ticks:" + ticks);
+				ticks = 0;
+				timer = 0;
+			}
+		}
+
+		stop();
+	}
+
+	private void init(){
+		display = new Display(title, width, height);
+		display.getFrame().addKeyListener(keyManager);
+		fileIO = new FileIO(this);
+		
+		p = new Player(this, 3, 3);
+		p.setPlayerInfo(FileIO.PLAYER_INIT_INFO);
+		
+		output = new Output(this);
+		output.setPlayer(p);
+		output.init_header();
+		
+		fileIO.loadLevel(1);
+//		output.setMap(FileIO.MAP1_MAP);
+		
+		// TEMPORARY ENEMIES FOR TESTING
+//		patrolList.add(new PatrolEnemy(this, 4, 4, true));
+//		wanderList.add(new WanderingEnemy(this, 4, 20));
+//		firingList.add(new FiringEnemy(this, 6,25));
+	}
+
+	private void tick(){
+		keyManager.tick();
+		fileIO.tick();
+		p.tick();
+
+	}
+
+	/**
+	 * Renders the output and displays it in the JFrame
+	 */
+	private void render(){
+		bs = display.getCanvas().getBufferStrategy();
+		if(bs == null){ // canvas has no buffer strategy
+			display.getCanvas().createBufferStrategy(3); 
+			//3 buffers are sufficient for this purpose
+			return;
+		}
+		g = bs.getDrawGraphics();
+		// Clear screen
+		g.clearRect(0, 0, width, height);
+		// Start drawing to screen
+
+		//		g.setColor(Color.BLACK);
+		//		g.fillRect(0, 0, width, height);
+
+		Font font = new Font("Consolas", Font.BOLD, 15);
+		g.setFont(font);
+		
+		output.setGraphics(g);
+		
+		output.init_header();
+		output.renderHeader();
+		output.setMap("D:/Documents/Github/Sanitarium/Sanitarium/res/maps/map1.txt");
+		
+		output.renderMap();
+		g.drawString(Integer.toString(count), 25, 15);
+		count++;
+				   
+		for(int i=0; i<47;i++) {
+			//153 PIXELS WIDE
+//			g.drawString("012345678.10.345678.20.345678.30.345678.40.345678.50.345678.60.345678.70.345678.80.345678.90.345678.100.45678.110.45678.120.45678.130.45678.140.45678.1503", 25, (i+10)*15);
+		}
+		
+		// End drawing
+		bs.show();
+		g.dispose();
+	}
+	
+	public KeyManager getKeyManager(){ return keyManager; }
+	
+	public synchronized void start(){
+		if(isRunning){
+			return;
+		}
+		else{
+			isRunning = true;
+			thread = new Thread(this);
+			thread.start();
+		}
+	}
+
+	public synchronized void stop(){
+		if(!isRunning){
+			return;
+		}
+		else{
+			try {
+				thread.join();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}	
+		}
+	}
+
+}

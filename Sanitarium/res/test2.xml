@@ -1,0 +1,1 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><map_elements><potion_list/><patrol_enemy_list><patrol_enemy health="10" is_LR="true" x_val="7" y_val="4"/></patrol_enemy_list><wandering_enemy_list><wandering_enemy health="20" x_val="5" y_val="22"/></wandering_enemy_list><firing_enemy_list><firing_enemy health="8" x_val="6" y_val="25"/></firing_enemy_list></map_elements>

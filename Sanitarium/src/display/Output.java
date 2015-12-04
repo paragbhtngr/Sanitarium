@@ -19,6 +19,7 @@ public class Output {
 
 	private Game game;
 	public int level = 1;
+	public String currMapStr;
 
 	private int w = 153;
 	private char[][] header = new char[7][w];
@@ -28,7 +29,9 @@ public class Output {
 	Player p;
 	int smashDelay = 0;
 	int throwDelay = 0;
+
 	int enemyDelay = 0;
+	int enemyDamageDelay = 0;
 
 	Graphics g;
 
@@ -51,24 +54,35 @@ public class Output {
 		}
 
 		//Print Player details
+		printPlayerStats();
 		printHealth();
 		printPotions();
 
 
 	}
+	private void printPlayerStats(){
+		String playerStats = p.getName() +" "+ p.getGender() +" "+ Integer.toString(p.getAge());
+		String playerStats2 = "Level: "+Integer.toString(p.getLevel())+" XP: "+Integer.toString(p.getXP())+" "+(int)p.getX()+" "+(int)p.getY();
+		for(int i=0;i<(playerStats.length()); i++){
+			this.header[2][i] = (playerStats).charAt(i);
+		}
+		for(int i=0;i<(playerStats2.length()); i++){
+			this.header[3][i] = (playerStats2).charAt(i);
+		}
+	}
 	private void printHealth() {
 		String HPString = "HP: |____________________| 000";
 		for(int i=0;i<(HPString.length()); i++){
-			this.header[3][i] = (HPString).charAt(i);
+			this.header[4][i] = (HPString).charAt(i);
 		}
 		for(int i=5;i<(p.getHealth()*20/p.getMaxHealth()+5);i++){
-			this.header[3][i] = '#';
+			this.header[4][i] = '#';
 		}
 		String printHealth = Integer.toString(p.getHealth());
 		if(p.getHealth() < 100){ printHealth = "0" + printHealth;}
 		if(p.getHealth() < 10) { printHealth = "0" + printHealth;}
 		for(int i=(HPString.length()-3);i<(HPString.length()); i++){
-			this.header[3][i] = (printHealth).charAt(i - (HPString.length()-3));
+			this.header[4][i] = (printHealth).charAt(i - (HPString.length()-3));
 		}
 	}
 	private void printPotions() {
@@ -88,6 +102,7 @@ public class Output {
 		}
 	}
 	public void setMap(String path){
+		this.currMapStr = path;
 		String line = null;
 		FileReader fileReader;
 		try {
@@ -98,7 +113,7 @@ public class Output {
 			for(int i=0; i<30;i++){ //row
 				line = bufferedReader.readLine();
 				for(int j=0; j<this.w;j++){ //column
-					map[i][j] = line.charAt(j);
+					this.map[i][j] = line.charAt(j);
 				}
 			}
 
@@ -120,33 +135,72 @@ public class Output {
 		renderPotions(renderMap);
 
 		// Render attack effects on map
+		if(game.getKeyManager().annihilate){
+			game.patrolList.clear();
+			game.wanderList.clear();
+			game.firingList.clear();
+		}
 		renderSmash(renderMap);
 		renderThrow(renderMap);
 
 		// Update enemies
+		if(enemyDelay <= 0){ enemyDelay = 15; } else{ enemyDelay--;}
 		// Update patrol enemies
 		updatePatrol(renderMap);
 		// Update wandering enemies
 		updateWander(renderMap);
 		// Update Firing enemies
 		updateFiring(renderMap);
-		
+
+
 		//Draw enemies
 		game.patrolList.removeIf(e -> (e.getY() == -1));
 		game.wanderList.removeIf(e -> (e.getY() == -1));
 		game.firingList.removeIf(e -> (e.getY() == -1));
 
+		for(PatrolEnemy i: game.patrolList){ updateChar(renderMap, (int)i.getY(), (int)i.getX(), i.getC()); }
+		for(WanderingEnemy i: game.wanderList){ updateChar(renderMap, (int)i.getY(), (int)i.getX(), i.getC()); }
+		for(FiringEnemy i: game.firingList){ updateChar(renderMap, (int)i.getY(), (int)i.getX(), i.getC()); }
+
 		// Generate effects on player
 		if(renderMap[(int) p.getY()][(int) p.getX()] == '~'){ p.setHealth(p.getHealth()-1); } // player is in water/lava
 		if(renderMap[(int) p.getY()][(int) p.getX()] == '*'){ p.setHealth(p.getHealth()-10); } // player is hit by fireball
-		if(renderMap[(int) p.getY()][(int) p.getX()] == '!'){ p.setHealth(p.getHealth()-5); } // player touched patrol guard
-		if(renderMap[(int) p.getY()][(int) p.getX()] == 'O'){ p.setHealth(p.getHealth()-12); } // player touched firing guard
-		if(renderMap[(int) p.getY()][(int) p.getX()] == '&'){ p.setHealth(p.getHealth()-15); } // player touched wandering guard
-		
+		if(renderMap[(int) p.getY()][(int) p.getX()] == 'X'){
+			if(		game.patrolList.size() == 0 &&
+					game.wanderList.size() == 0 &&
+					game.firingList.size() == 0 ) {
+				// Level cleared of enemies. Next Level!
+				this.level++;
+				game.p.setX(3);
+				game.p.setY(3);
+				game.fileIO.loadLevel(this.level);
+			}
+		}
+
+		if(enemyDamageDelay >0){ enemyDamageDelay--; }
+		else {
+			if(renderMap[(int) p.getY()][(int) p.getX()] == '!'){ // player touched patrol guard
+				p.setHealth(p.getHealth()-5); 
+				enemyDamageDelay += 25;
+				if(enemyDamageDelay > 25) {enemyDamageDelay = 25; }
+			} 
+			if(renderMap[(int) p.getY()][(int) p.getX()] == 'O'){ // player touched firing guard
+				p.setHealth(p.getHealth()-12);
+				enemyDamageDelay += 25;
+				if(enemyDamageDelay > 25) {enemyDamageDelay = 25; }
+			} 
+			if(renderMap[(int) p.getY()][(int) p.getX()] == '&'){ // player touched wandering guard
+				p.setHealth(p.getHealth()-15); 
+				enemyDamageDelay += 25;
+				if(enemyDamageDelay > 25) {enemyDamageDelay = 25; }
+			} 
+		}
+
+
 		if(p.getHealth() <= 0){ // Player is dead
 			System.out.println("You died");
 		}
-		
+
 		// Draw player
 		renderMap[(int) p.getY()][(int) p.getX()] = '@';
 
@@ -165,19 +219,24 @@ public class Output {
 			if(		renderMap[(int) i.getY()][(int) i.getX()] == '>' ||
 					renderMap[(int) i.getY()][(int) i.getX()] == '<' ||
 					renderMap[(int) i.getY()][(int) i.getX()] == '^' ||
-					renderMap[(int) i.getY()][(int) i.getX()] == 'v' ||
-					renderMap[(int) i.getY()][(int) i.getX()] == '+')
-			{ // do damage to enemy
-				i.setHealth((int) (i.getHealth() - p.getAttack()*0.5));
+					renderMap[(int) i.getY()][(int) i.getX()] == 'v'
+					)
+			{ // do damage to enemy by arrow
+				i.setHealth((int) (i.getHealth() - p.getAttack()*0.4));
+				game.arrowList.removeIf(e -> (e.getY() == i.getY() && e.getX() == i.getX()));
+			}
+			else if(renderMap[(int) i.getY()][(int) i.getX()] == '+'){ // do damage by smash
+				i.setHealth((int) (i.getHealth() - p.getAttack()*0.2));
 			}
 			if(i.getHealth()<= 0){
 				i.setX(-1); // remove element from board
 				i.setY(-1);
-				
+
 				p.addXP(50);
 			}
 			else if(enemyDelay <= 0){
 				game.arrowList.add(new Fireball(game, i.getDir(), (int)i.getY(), (int)i.getX()));
+				i.addDir();
 			}
 		}
 	}
@@ -186,15 +245,19 @@ public class Output {
 			if(		renderMap[(int) i.getY()][(int) i.getX()] == '>' ||
 					renderMap[(int) i.getY()][(int) i.getX()] == '<' ||
 					renderMap[(int) i.getY()][(int) i.getX()] == '^' ||
-					renderMap[(int) i.getY()][(int) i.getX()] == 'v' ||
-					renderMap[(int) i.getY()][(int) i.getX()] == '+')
-			{ // do damage to enemy
-				i.setHealth((int) (i.getHealth() - p.getAttack()*0.5));
+					renderMap[(int) i.getY()][(int) i.getX()] == 'v'
+					)
+			{ // do damage to enemy by arrow
+				i.setHealth((int) (i.getHealth() - p.getAttack()*0.4));
+				game.arrowList.removeIf(e -> (e.getY() == i.getY() && e.getX() == i.getX()));
+			}
+			else if(renderMap[(int) i.getY()][(int) i.getX()] == '+'){ // do damage by smash
+				i.setHealth((int) (i.getHealth() - p.getAttack()*0.2));
 			}
 			if(i.getHealth()<= 0){
 				i.setX(-1); // remove element from board
 				i.setY(-1);
-				
+
 				p.addXP(40);
 			}
 			else if (enemyDelay <= 0){
@@ -207,6 +270,7 @@ public class Output {
 					else { // need to turn back
 						i.setY(i.getY()+1);
 					}
+					break;
 				case 1: // down 
 					if(renderMap[(int) i.getY()+1][(int) i.getX()] != '#' && renderMap[(int) i.getY()+1][(int) i.getX()] != '~'){
 						i.setY(i.getY()+1);
@@ -214,6 +278,7 @@ public class Output {
 					else { // need to turn back
 						i.setY(i.getY() -1);
 					}
+					break;
 				case 2: // left 
 					if(renderMap[(int) i.getY()][(int) i.getX()-1] != '#' && renderMap[(int) i.getY()][(int) i.getX()-1] != '~'){
 						i.setX(i.getX()-1);
@@ -221,6 +286,7 @@ public class Output {
 					else { // need to turn back
 						i.setX(i.getX()+1);
 					}
+					break;
 				case 3: // right 
 					if(renderMap[(int) i.getY()][(int) i.getX()+1] != '#' && renderMap[(int) i.getY()][(int) i.getX()+1] != '~'){
 						i.setX(i.getX()+1);
@@ -237,15 +303,19 @@ public class Output {
 			if(		renderMap[(int) i.getY()][(int) i.getX()] == '>' ||
 					renderMap[(int) i.getY()][(int) i.getX()] == '<' ||
 					renderMap[(int) i.getY()][(int) i.getX()] == '^' ||
-					renderMap[(int) i.getY()][(int) i.getX()] == 'v' ||
-					renderMap[(int) i.getY()][(int) i.getX()] == '+')
-			{ // do damage to enemy
-				i.setHealth((int) (i.getHealth() - p.getAttack()*0.5));
+					renderMap[(int) i.getY()][(int) i.getX()] == 'v'
+					)
+			{ // do damage to enemy by arrow
+				i.setHealth((int) (i.getHealth() - p.getAttack()*0.4));
+				game.arrowList.removeIf(e -> (e.getY() == i.getY() && e.getX() == i.getX()));
+			}
+			else if(renderMap[(int) i.getY()][(int) i.getX()] == '+'){ // do damage by smash
+				i.setHealth((int) (i.getHealth() - p.getAttack()*0.2));
 			}
 			if(i.getHealth()<= 0){
 				i.setX(-1); // remove element from board
 				i.setY(-1);
-				
+
 				p.addXP(30);
 			}
 			// down and right are positive
@@ -276,7 +346,7 @@ public class Output {
 							i.setY(i.getY()+1);
 						}
 						else { // need to turn back
-							i.setY(i.getY() + 1);
+							i.setY(i.getY() - 1);
 							i.toggleIsPosDir();
 						}
 					}

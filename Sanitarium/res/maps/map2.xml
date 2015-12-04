@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<map_elements>
+	<potion_list>
+		<potion x_val="66" y_val="9"/>
+		<potion x_val="86" y_val="9"/>
+		<potion x_val="80" y_val="14"/>
+		<potion x_val="72" y_val="14"/>
+
+	</potion_list>
+	<patrol_enemy_list>
+		<patrol_enemy health="10" is_LR="false" is_pos_dir="true" x_val="20" y_val="1"/>
+		<patrol_enemy health="10" is_LR="false" is_pos_dir="true" x_val="21" y_val="2"/>
+		<patrol_enemy health="10" is_LR="false" is_pos_dir="true" x_val="22" y_val="3"/>
+		<patrol_enemy health="10" is_LR="false" is_pos_dir="true" x_val="23" y_val="2"/>
+		<patrol_enemy health="10" is_LR="false" is_pos_dir="true" x_val="24" y_val="1"/>
+		<patrol_enemy health="10" is_LR="false" is_pos_dir="true" x_val="25" y_val="2"/>
+		<patrol_enemy health="10" is_LR="false" is_pos_dir="true" x_val="26" y_val="3"/>
+		<patrol_enemy health="10" is_LR="false" is_pos_dir="true" x_val="27" y_val="2"/>
+		<patrol_enemy health="10" is_LR="false" is_pos_dir="true" x_val="28" y_val="1"/>
+		<patrol_enemy health="10" is_LR="false" is_pos_dir="true" x_val="29" y_val="2"/>
+		<patrol_enemy health="10" is_LR="false" is_pos_dir="true" x_val="30" y_val="3"/>
+		<patrol_enemy health="10" is_LR="false" is_pos_dir="true" x_val="120" y_val="1"/>
+		<patrol_enemy health="10" is_LR="false" is_pos_dir="true" x_val="121" y_val="2"/>
+		<patrol_enemy health="10" is_LR="false" is_pos_dir="true" x_val="122" y_val="3"/>
+		<patrol_enemy health="10" is_LR="false" is_pos_dir="true" x_val="123" y_val="2"/>
+		<patrol_enemy health="10" is_LR="false" is_pos_dir="true" x_val="124" y_val="1"/>
+		<patrol_enemy health="10" is_LR="false" is_pos_dir="true" x_val="125" y_val="2"/>
+		<patrol_enemy health="10" is_LR="false" is_pos_dir="true" x_val="126" y_val="3"/>
+		<patrol_enemy health="10" is_LR="false" is_pos_dir="true" x_val="127" y_val="2"/>
+		<patrol_enemy health="10" is_LR="false" is_pos_dir="true" x_val="128" y_val="1"/>
+		<patrol_enemy health="10" is_LR="false" is_pos_dir="true" x_val="129" y_val="2"/>
+		<patrol_enemy health="10" is_LR="false" is_pos_dir="true" x_val="130" y_val="3"/>
+	</patrol_enemy_list>
+	<wandering_enemy_list>
+		<wandering_enemy health="20" x_val="10" y_val="6"/>
+		<wandering_enemy health="20" x_val="15" y_val="6"/>
+		<wandering_enemy health="20" x_val="20" y_val="6"/>
+		<wandering_enemy health="20" x_val="25" y_val="6"/>
+		<wandering_enemy health="20" x_val="30" y_val="6"/>
+		<wandering_enemy health="20" x_val="120" y_val="6"/>
+		<wandering_enemy health="20" x_val="125" y_val="6"/>
+		<wandering_enemy health="20" x_val="130" y_val="6"/>
+		<wandering_enemy health="20" x_val="135" y_val="6"/>
+		<wandering_enemy health="20" x_val="140" y_val="6"/>
+	</wandering_enemy_list>
+	<firing_enemy_list>
+		<firing_enemy direction="8" health="50" x_val="48" y_val="1"/>
+		<firing_enemy direction="8" health="50" x_val="48" y_val="2"/>
+		<firing_enemy direction="8" health="50" x_val="48" y_val="3"/>
+		<firing_enemy direction="8" health="50" x_val="5" y_val="15"/>
+		<firing_enemy direction="8" health="50" x_val="5" y_val="23"/>
+		<firing_enemy direction="8" health="50" x_val="9" y_val="18"/>
+		<firing_enemy direction="8" health="50" x_val="9" y_val="26"/>
+		<firing_enemy direction="8" health="50" x_val="13" y_val="15"/>
+		<firing_enemy direction="8" health="50" x_val="13" y_val="23"/>
+		<firing_enemy direction="8" health="50" x_val="47" y_val="15"/>
+		<firing_enemy direction="8" health="50" x_val="47" y_val="23"/>
+		<firing_enemy direction="8" health="50" x_val="51" y_val="18"/>
+		<firing_enemy direction="8" health="50" x_val="51" y_val="26"/>
+		<firing_enemy direction="8" health="50" x_val="55" y_val="15"/>
+		<firing_enemy direction="8" health="50" x_val="55" y_val="23"/>
+		<firing_enemy direction="8" health="50" x_val="98" y_val="15"/>
+		<firing_enemy direction="8" health="50" x_val="98" y_val="23"/>
+		<firing_enemy direction="8" health="50" x_val="102" y_val="18"/>
+		<firing_enemy direction="8" health="50" x_val="102" y_val="26"/>
+		<firing_enemy direction="8" health="50" x_val="106" y_val="15"/>
+		<firing_enemy direction="8" health="50" x_val="106" y_val="23"/>
+		<firing_enemy direction="8" health="50" x_val="137" y_val="15"/>
+		<firing_enemy direction="8" health="50" x_val="137" y_val="23"/>
+		<firing_enemy direction="8" health="50" x_val="141" y_val="18"/>
+		<firing_enemy direction="8" health="50" x_val="141" y_val="26"/>
+		<firing_enemy direction="8" health="50" x_val="145" y_val="15"/>
+		<firing_enemy direction="8" health="50" x_val="145" y_val="23"/>
+	</firing_enemy_list>
+</map_elements>

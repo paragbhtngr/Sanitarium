@@ -48,7 +48,7 @@ main (int argc, char *argv[])
 		getchar(); // consumes the new line character
 		gender = getchar();
 		if(gender == 'm' || gender == 'M'){
-			gender == 'M';
+			gender = 'M';
 			printf("Ah, so you're a bloke, eh? Press y to confirm. Press any other key to re-enter.\n");
 			getchar(); // consumes the new line character
 			c = getchar();
@@ -57,7 +57,7 @@ main (int argc, char *argv[])
 			}
 		}
 		if(gender == 'f' || gender == 'F'){
-			gender == 'F';
+			gender = 'F';
 			printf("Enchante mademoiselle. Press y to confirm. Press any other key to re-enter.\n");
 			getchar(); // consumes the new line character
 			c = getchar();
@@ -67,7 +67,7 @@ main (int argc, char *argv[])
 		}
 		else{
 			printf("I get it. You don't subscribe to gender binaries. That's cool. Still, humour me\n");
-			getchar(); // consumes the new line character
+			// getchar(); // consumes the new line character
 		}
 	}
 

@@ -26,6 +26,7 @@ public class XMLParser {
 	static Game game;
 
 	public static void saveToXML(Game game, String filename){
+		System.out.println("SAVING IN SLOT "+filename);
 		try {
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
@@ -38,7 +39,7 @@ public class XMLParser {
 			// Store the player's stats and position
 			Element player = doc.createElement("player");
 
-			Attr gLevel = doc.createAttribute("game_level");			gLevel.setValue(Integer.toString(game.level));
+			Attr gLevel = doc.createAttribute("game_level");			gLevel.setValue(Integer.toString(game.output.level));
 
 			Attr name = doc.createAttribute("name"); 					name.setValue(game.p.getName());
 			Attr gender = doc.createAttribute("gender"); 				gender.setValue(game.p.getGender());
@@ -56,6 +57,9 @@ public class XMLParser {
 			Attr playerX = doc.createAttribute("x_val");				playerX.setValue(Integer.toString((int)game.p.getX()));
 			Attr playerY = doc.createAttribute("y_val");				playerY.setValue(Integer.toString((int)game.p.getY()));
 
+			player.setAttributeNode(gLevel);
+			player.setAttributeNode(pLevel);
+			player.setAttributeNode(pXP);
 			player.setAttributeNode(name);
 			player.setAttributeNode(gender);
 			player.setAttributeNode(age);
@@ -66,10 +70,10 @@ public class XMLParser {
 			player.setAttributeNode(potions);
 			player.setAttributeNode(playerX);
 			player.setAttributeNode(playerY);
-
+			rootElement.appendChild(player);
 			//potion list
 			Element potionList = doc.createElement("potion_list");
-			rootElement.appendChild(potionList);
+			
 			//  potion element
 			for(int i=0;i<game.potionList.size();i++){
 				Element potion = doc.createElement("potion");
@@ -82,10 +86,11 @@ public class XMLParser {
 				potion.setAttributeNode(potionX);
 				potion.setAttributeNode(potionY);	 
 			}
+			rootElement.appendChild(potionList);
 
 			//patrol enemy list
 			Element patrolList = doc.createElement("patrol_enemy_list");
-			rootElement.appendChild(patrolList);
+			
 			//  patrol enemy element
 			for(int i=0;i<game.patrolList.size();i++){
 				Element patrol = doc.createElement("patrol_enemy");
@@ -94,20 +99,21 @@ public class XMLParser {
 				// setting attribute values for patrol enemy
 				Attr patrolHealth = doc.createAttribute("health");		patrolHealth.setValue(Integer.toString(game.patrolList.get(i).getHealth()));
 				Attr patrolDir = doc.createAttribute("is_LR");			patrolDir.setValue(Boolean.toString(game.patrolList.get(i).isLRPatrol()));
-				Attr isPosDir = doc.createAttribute("is_pos_dir");		patrolDir.setValue(Boolean.toString(game.patrolList.get(i).isPosDir()));
+				Attr isPosDir = doc.createAttribute("is_pos_dir");		isPosDir.setValue(Boolean.toString(game.patrolList.get(i).isPosDir()));
 
 				Attr patrolX = doc.createAttribute("x_val"); 			patrolX.setValue(Integer.toString((int)game.patrolList.get(i).getX()));
 				Attr patrolY = doc.createAttribute("y_val");			patrolY.setValue(Integer.toString((int)game.patrolList.get(i).getY()));
 
 				patrol.setAttributeNode(patrolHealth);
 				patrol.setAttributeNode(patrolDir);
+				patrol.setAttributeNode(isPosDir);
 				patrol.setAttributeNode(patrolX);
 				patrol.setAttributeNode(patrolY);	 
 			}
+			rootElement.appendChild(patrolList);
 
 			//wandering enemy list
 			Element wanderList = doc.createElement("wandering_enemy_list");
-			rootElement.appendChild(wanderList);
 			//  wandering enemy element
 			for(int i=0;i<game.wanderList.size();i++){
 				Element wander = doc.createElement("wandering_enemy");
@@ -122,10 +128,10 @@ public class XMLParser {
 				wander.setAttributeNode(wanderX);
 				wander.setAttributeNode(wanderY);	 
 			}
+			rootElement.appendChild(wanderList);
 
 			//firing enemy list
 			Element firingList = doc.createElement("firing_enemy_list");
-			rootElement.appendChild(firingList);
 			//  firing enemy element
 			for(int i=0;i<game.firingList.size();i++){
 				Element firing = doc.createElement("firing_enemy");
@@ -133,37 +139,34 @@ public class XMLParser {
 
 				// setting attribute values for firing enemy
 				Attr firingHealth = doc.createAttribute("health");		firingHealth.setValue(Integer.toString(game.firingList.get(i).getHealth()));
-				Attr firingDir = doc.createAttribute("direction");		firingHealth.setValue(Integer.toString(game.firingList.get(i).getDir()));
+				Attr firingDir = doc.createAttribute("direction");		firingDir.setValue(Integer.toString(game.firingList.get(i).getDir()));
 				Attr firingX = doc.createAttribute("x_val"); 			firingX.setValue(Integer.toString((int)game.firingList.get(i).getX()));
 				Attr firingY = doc.createAttribute("y_val");			firingY.setValue(Integer.toString((int)game.firingList.get(i).getY()));
 
 				firing.setAttributeNode(firingHealth);
+				firing.setAttributeNode(firingDir);
 				firing.setAttributeNode(firingX);
 				firing.setAttributeNode(firingY);	 
 			}
-
+			rootElement.appendChild(firingList);
 
 			// write the content into xml file
 			TransformerFactory transformerFactory = TransformerFactory.newInstance();
 			Transformer transformer = transformerFactory.newTransformer();
 			DOMSource source = new DOMSource(doc);
-			StreamResult result = new StreamResult(new File("./res/saves/"+filename+".xml"));
+			StreamResult result = new StreamResult(new File(filename));
 			transformer.transform(source, result);
-			// Output to console for testing
-			StreamResult consoleResult =
-					new StreamResult(System.out);
-			transformer.transform(source, consoleResult);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	public static void loadFromXML(Game _game, String fileDir){
-
+	public static void loadFromXML(Game _game, String filename){
+		System.out.println("LOADING FROM SLOT "+filename);
 		game = _game;
 
 		try {	
-			File inputFile = new File(fileDir);
+			File inputFile = new File(filename);
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 			Document doc = dBuilder.parse(inputFile);
@@ -171,28 +174,34 @@ public class XMLParser {
 
 			// Create player
 			NodeList pList = doc.getElementsByTagName("player");
-			Node pNode = pList.item(0);
-			if (pNode.getNodeType() == Node.ELEMENT_NODE) {
-				Element eElement = (Element) pNode;
-				game.level = Integer.parseInt(eElement.getAttribute("game_level"));
-				// Player character attributes
-				game.p.setName(eElement.getAttribute("name"));
-				game.p.setGender(eElement.getAttribute("gender"));
-				game.p.setAge(Integer.parseInt(eElement.getAttribute("age")));
-				game.p.setLevel(Integer.parseInt(eElement.getAttribute("player_level")));
-				game.p.setXP(Integer.parseInt(eElement.getAttribute("player_XP")));
-				// Player game attributes
-				game.p.setMaxHealth(Integer.parseInt(eElement.getAttribute("max_health")));
-				game.p.setHealth(Integer.parseInt(eElement.getAttribute("health")));
-				game.p.setAttack(Integer.parseInt(eElement.getAttribute("attack")));
-				game.p.setMana(Integer.parseInt(eElement.getAttribute("mana")));
-				game.p.setPotion(Integer.parseInt(eElement.getAttribute("potions")));
-				// Player coordinates
-				game.p.setX(Integer.parseInt(eElement.getAttribute("x_val")));
-				game.p.setY(Integer.parseInt(eElement.getAttribute("y_val")));
+			if(pList.getLength() != 0){
+				Node pNode = pList.item(0);
+				if (pNode.getNodeType() == Node.ELEMENT_NODE) {
+					Element eElement = (Element) pNode;
+					game.arrowList.clear();
+					game.output.level = Integer.parseInt(eElement.getAttribute("game_level"));
+					game.output.level = game.output.level; 
+					game.output.setMap(game.fileIO.getMapStr(game.output.level));
+					// Player character attributes
+					game.p.setName(eElement.getAttribute("name"));
+					game.p.setGender(eElement.getAttribute("gender"));
+					game.p.setAge(Integer.parseInt(eElement.getAttribute("age")));
+					game.p.setLevel(Integer.parseInt(eElement.getAttribute("player_level")));
+					game.p.setXP(Integer.parseInt(eElement.getAttribute("player_XP")));
+					// Player game attributes
+					game.p.setMaxHealth(Integer.parseInt(eElement.getAttribute("max_health")));
+					game.p.setHealth(Integer.parseInt(eElement.getAttribute("health")));
+					game.p.setAttack(Integer.parseInt(eElement.getAttribute("attack")));
+					game.p.setMana(Integer.parseInt(eElement.getAttribute("mana")));
+					game.p.setPotion(Integer.parseInt(eElement.getAttribute("potions")));
+					// Player coordinates
+					game.p.setX(Integer.parseInt(eElement.getAttribute("x_val")));
+					game.p.setY(Integer.parseInt(eElement.getAttribute("y_val")));
+				}
 			}
 
 			// Create potion list for map
+			game.potionList.clear(); // Remove everything so that it doesn't add to current state
 			NodeList nList = doc.getElementsByTagName("potion");
 			for (int temp = 0; temp < nList.getLength(); temp++) {
 				Node nNode = nList.item(temp);
@@ -203,6 +212,7 @@ public class XMLParser {
 			}
 
 			// Create patrol enemy list for map
+			game.patrolList.clear(); // Remove everything so that it doesn't add to current state
 			nList = doc.getElementsByTagName("patrol_enemy");
 			for (int temp = 0; temp < nList.getLength(); temp++) {
 				Node nNode = nList.item(temp);
@@ -216,6 +226,7 @@ public class XMLParser {
 				}
 			}
 			// Create wandering enemy list for map
+			game.wanderList.clear(); // Remove everything so that it doesn't add to current state
 			nList = doc.getElementsByTagName("wandering_enemy");
 			for (int temp = 0; temp < nList.getLength(); temp++) {
 				Node nNode = nList.item(temp);
@@ -228,6 +239,7 @@ public class XMLParser {
 				}
 			}
 			// Create firing enemy list for map
+			game.firingList.clear(); // Remove everything so that it doesn't add to current state
 			nList = doc.getElementsByTagName("firing_enemy");
 			for (int temp = 0; temp < nList.getLength(); temp++) {
 				Node nNode = nList.item(temp);

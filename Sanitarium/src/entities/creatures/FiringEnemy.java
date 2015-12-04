@@ -20,7 +20,7 @@ public class FiringEnemy extends Creature{
 	public void setDir(int dir) { this.dir = dir; }
 	public void addDir() { 
 		if(this.dir == 8){
-			this.dir = 0;
+			this.dir = 2;
 		}
 		else {
 			this.dir += 2;

@@ -27,13 +27,11 @@ public class Game implements Runnable{
 	public int width, height;
 	public String title;
 	public Output output;
+	public FileIO fileIO;
 	
 	public Player p;
 	public int playerInitX = 3;
 	public int playerInitY = 3;
-	
-	public int level;
-	public char[][] map;
 	
 	public List<Arrow> arrowList = new ArrayList<Arrow>();
 	public List<Potion> potionList = new ArrayList<Potion>();
@@ -96,22 +94,27 @@ public class Game implements Runnable{
 	private void init(){
 		display = new Display(title, width, height);
 		display.getFrame().addKeyListener(keyManager);
+		fileIO = new FileIO(this);
 		
 		p = new Player(this, 3, 3);
-		
 		p.setPlayerInfo(FileIO.PLAYER_INIT_INFO);
 		
 		output = new Output(this);
 		output.setPlayer(p);
 		output.init_header();
 		
-		output.setMap(FileIO.MAP1_MAP);
-		map = output.getMap();
+		fileIO.loadLevel(output.level);
+//		output.setMap(FileIO.MAP1_MAP);
 		
+		// TEMPORARY ENEMIES FOR TESTING
+//		patrolList.add(new PatrolEnemy(this, 4, 4, true));
+//		wanderList.add(new WanderingEnemy(this, 4, 20));
+//		firingList.add(new FiringEnemy(this, 6,25));
 	}
 
 	private void tick(){
 		keyManager.tick();
+		fileIO.tick();
 		p.tick();
 
 	}
@@ -141,7 +144,7 @@ public class Game implements Runnable{
 		
 		output.init_header();
 		output.renderHeader();
-		output.setMap("D:/Documents/Github/Sanitarium/Sanitarium/res/maps/map1.txt");
+		output.setMap(output.currMapStr);
 		
 		output.renderMap();
 		g.drawString(Integer.toString(count), 25, 15);

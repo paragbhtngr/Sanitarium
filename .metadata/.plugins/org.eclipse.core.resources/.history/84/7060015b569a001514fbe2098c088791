@@ -1,0 +1,28 @@
+package game;
+
+import display.XMLParser;
+
+public class FileIO {
+	private Game game;
+	
+	public static final String PLAYER_INIT_INFO = "./res/player.txt";
+	
+	public static final String MAP1_MAP = "./res/maps/map1.txt";
+	public static final String MAP2_MAP = "./res/maps/map2.txt";
+	public static final String MAP3_MAP = "./res/maps/map3.txt";
+	public static final String BOSS_MAP = "./res/maps/mapboss.txt";
+	public static final String MAP1_ELEMENTS = "./res/maps/map1.xml";
+	public static final String MAP2_ELEMENTS = "./res/maps/map2.xml";
+	public static final String MAP3_ELEMENTS = "./res/maps/map3.xml";
+	public static final String BOSS_MAP_ELEMENTS = "./res/maps/mapboss.xml";
+	
+	public FileIO(Game game){ this.game = game; }
+	
+	public void tick(){
+		// Check for calls to load or save a game
+		if(game.getKeyManager().to1){ XMLParser.saveToXML(this.game, "1"); }
+		if(game.getKeyManager().to2){ XMLParser.saveToXML(this.game, "2"); }
+		if(game.getKeyManager().to3){ XMLParser.saveToXML(this.game, "3"); }
+	}
+	
+}

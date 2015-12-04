@@ -16,8 +16,8 @@ public class Player extends Creature{
 	private int XP = 0;
 	private int level = 1;
 	private int attack, mana, maxHealth;
-	private int potions = 0;
-	
+	private int potions = 3;
+	private int potionDelay = 0;
 	
 	public Player(Game game, int x, int y) {
 		super(x, y);
@@ -59,8 +59,6 @@ public class Player extends Creature{
 	public int getAge () {return this.age; }
 
 	public void setPlayerInfo(String path) {
-		String line = null;
-		
 		try {
             // FileReader reads text files in the default encoding.
             FileReader fileReader = new FileReader(path);
@@ -73,6 +71,7 @@ public class Player extends Creature{
             health = maxHealth;
             attack = Integer.parseInt(bufferedReader.readLine());
             mana = Integer.parseInt(bufferedReader.readLine());
+            
             
             System.out.println(name);
             System.out.println(health);
@@ -94,33 +93,49 @@ public class Player extends Creature{
 
 	@Override
 	public void tick() {
+		if(potionDelay > 0) { potionDelay--; }
+		
 		if(game.getKeyManager().up){ pMoveUp();}
 		if(game.getKeyManager().down){ pMoveDown();}
 		if(game.getKeyManager().left){ pMoveLeft();}
 		if(game.getKeyManager().right){ pMoveRight();}
+		if(game.getKeyManager().usePotion){ pUsePotion();}
 		
 	}
 
+	private void pUsePotion() {
+		if(potionDelay <= 0){
+			if(this.potions > 0){
+				this.potions--;
+				potionDelay += 25;
+				this.health += this.mana;
+				if(this.health >= this.maxHealth){
+					this.health = this.maxHealth;
+				}
+			}	
+		}
+	}
+
 	private void pMoveRight() {
-		if(game.map[(int) y][(int) (x+0.5)] != '#'){
+		if(game.output.getMap()[(int) y][(int) (x+0.5)] != '#'){
 			x = x + 0.5;	
 		}
 	}
 
 	private void pMoveLeft() {
-		if(game.map[(int) y][(int) (x-0.5)] != '#'){
+		if(game.output.getMap()[(int) y][(int) (x-0.5)] != '#'){
 			x = x - 0.5;	
 		}
 	}
 
 	private void pMoveDown() {
-		if(game.map[(int) (y+0.3)][(int) (x)] != '#'){
+		if(game.output.getMap()[(int) (y+0.3)][(int) (x)] != '#'){
 			y = y + 0.3;	
 		}
 	}
 
 	private void pMoveUp() {
-		if(game.map[(int) (y-0.3)][(int) (x)] != '#'){
+		if(game.output.getMap()[(int) (y-0.3)][(int) (x)] != '#'){
 			y = y - 0.3;	
 		}
 	}

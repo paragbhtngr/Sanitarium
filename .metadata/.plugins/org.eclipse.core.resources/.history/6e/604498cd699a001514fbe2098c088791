@@ -1,0 +1,34 @@
+package game;
+
+import display.XMLParser;
+
+public class FileIO {
+	private Game game;
+	private int saveDelay = 0;
+	
+	public static final String PLAYER_INIT_INFO = "./res/player.txt";
+	
+	public static final String MAP1_MAP = "./res/maps/map1.txt";
+	public static final String MAP2_MAP = "./res/maps/map2.txt";
+	public static final String MAP3_MAP = "./res/maps/map3.txt";
+	public static final String BOSS_MAP = "./res/maps/mapboss.txt";
+	public static final String MAP1_ELEMENTS = "./res/maps/map1.xml";
+	public static final String MAP2_ELEMENTS = "./res/maps/map2.xml";
+	public static final String MAP3_ELEMENTS = "./res/maps/map3.xml";
+	public static final String BOSS_MAP_ELEMENTS = "./res/maps/mapboss.xml";
+	
+	public FileIO(Game game){ this.game = game; }
+	
+	public void tick(){
+		if(saveDelay > 0) { saveDelay--; }
+		// Check for calls to load or save a game
+		if(game.getKeyManager().to1){ XMLParser.saveToXML(this.game, "1"); }
+		if(game.getKeyManager().to2){ XMLParser.saveToXML(this.game, "2"); }
+		if(game.getKeyManager().to3){ XMLParser.saveToXML(this.game, "3"); }
+		
+		if(game.getKeyManager().from1){ XMLParser.loadFromXML(this.game, "1"); }
+		if(game.getKeyManager().from2){ XMLParser.loadFromXML(this.game, "2"); }
+		if(game.getKeyManager().from3){ XMLParser.loadFromXML(this.game, "3"); }
+	}
+	
+}
