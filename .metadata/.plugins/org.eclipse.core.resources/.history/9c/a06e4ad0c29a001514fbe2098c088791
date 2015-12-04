@@ -50,8 +50,8 @@ public class FileIO {
 			XMLParser.loadFromXML(this.game, MAP3_ELEMENTS);
 			break;
 		case 4: //boss
-			game.output.setMap(BOSS_MAP);
-			XMLParser.loadFromXML(this.game, BOSS_MAP_ELEMENTS);
+			game.output.setMap(MAP1_MAP);
+			XMLParser.loadFromXML(this.game, MAP1_ELEMENTS);
 			break;
 		}
 	}
