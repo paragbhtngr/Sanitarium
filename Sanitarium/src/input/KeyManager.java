@@ -7,8 +7,8 @@ public class KeyManager implements KeyListener {
 	
 	private boolean[] keys;
 	public boolean up, down, left, right;
-	public boolean smash, throwUp, throwDown, throwLeft, throwRight;
-	public boolean usePotion;
+	public boolean smash, throwUp, throwDown, throwLeft, throwRight, usePotion;
+	public boolean to1, to2, to3, ctrl;
 	public KeyManager(){
 		keys = new boolean[256];
 	}
@@ -28,6 +28,15 @@ public class KeyManager implements KeyListener {
 		throwRight = keys[KeyEvent.VK_D];
 		
 		// Use Potion item
+		usePotion = keys[KeyEvent.VK_SHIFT];
+		
+		// Load/Save file slots
+		to1 = keys[KeyEvent.VK_1];
+		to2 = keys[KeyEvent.VK_2];
+		to3 = keys[KeyEvent.VK_3];
+		
+		// ctrl modifier
+		ctrl = keys[KeyEvent.VK_CONTROL];
 		
 	}
 	

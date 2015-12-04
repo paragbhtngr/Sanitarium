@@ -1,0 +1,13 @@
+package game;
+
+public class FileIO {
+	private Game game;
+	
+	public FileIO(Game game){ this.game = game; }
+	
+	public void tick(){
+		// Check for calls to load or save a game
+		if(game.getKeyManager().to1){ XMLParser.saveToXML(this.game, "1"); }
+	}
+	
+}

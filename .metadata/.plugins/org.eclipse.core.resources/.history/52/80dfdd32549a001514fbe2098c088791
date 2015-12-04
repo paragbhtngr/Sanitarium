@@ -1,0 +1,9 @@
+package game;
+
+public class FileIO {
+	private Game game;
+	
+	public FileIO(Game game){ this.game = game; }
+	
+	
+}

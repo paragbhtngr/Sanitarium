@@ -11,7 +11,10 @@ import game.Game;
 public class Player extends Creature{
 	
 	private Game game;
-	private String name;
+	private String name, gender;
+	private int age;
+	private int XP = 0;
+	private int level = 1;
 	private int attack, mana, maxHealth;
 	private int potions = 0;
 	
@@ -21,18 +24,39 @@ public class Player extends Creature{
 		this.game = game;
 	}
 	
+	public void setName(String name) { this.name = name; }
+	public void setGender (String gender) {this.gender = gender; }
+	public void setAge (int age) {this.age = age; }
 	public void setMaxHealth(int x){ this.maxHealth = x; }
 	public void setHealth(int x){ super.health = x; }
 	public void setAttack(int x){ this.attack = x; }
 	public void setMana(int x){ this.attack = x; }
 	public void addPotion(){ this.potions++; }
+	public void setPotion(int p){ this.potions = p; }
+	public void setLevel(int l) { this.level = l; };
+	public void setXP(int xp) { this.XP = xp; }
+	public void addXP(int xp) {
+		this.XP += xp;
+		if(this.XP >= 100*this.level){
+			this.XP -= 100*this.level;
+			level++;
+			this.maxHealth += 10;
+			this.health = this.maxHealth;
+			this.attack += 10;
+			this.mana += 10;
+		}
+	}
 	
 	public int getMaxHealth(){ return maxHealth; }
 	public int getHealth(){ return super.health; }
 	public int getAttack(){ return this.attack; }
 	public int getMana(){ return this.attack; }
 	public int getPotions() { return this.potions; }
+	public int getLevel() { return this.level; }
+	public int getXP() { return this.XP; }
 	public String getName () { return this.name; }
+	public String getGender () {return this.gender; }
+	public int getAge () {return this.age; }
 
 	public void setPlayerInfo(String path) {
 		String line = null;
@@ -43,6 +67,8 @@ public class Player extends Creature{
             BufferedReader bufferedReader = new BufferedReader(fileReader);
             
             name = bufferedReader.readLine();
+            gender = bufferedReader.readLine();
+            age = Integer.parseInt(bufferedReader.readLine());
             maxHealth = Integer.parseInt(bufferedReader.readLine());
             health = maxHealth;
             attack = Integer.parseInt(bufferedReader.readLine());

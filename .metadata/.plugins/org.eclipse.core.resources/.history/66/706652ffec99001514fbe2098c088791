@@ -1,0 +1,19 @@
+package entities.creatures;
+
+import game.Game;
+
+public class FiringEnemy extends Creature{
+	private Game game;
+	private int dir = 0;
+	private char c = 'O';
+	
+	public FiringEnemy(Game game, int x, int y) {	
+		super(x, y);
+		super.health = 10;
+		this.game = game;
+	}
+	
+	@Override
+	public void tick() {
+	}
+}

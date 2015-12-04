@@ -60,7 +60,7 @@ public class Game implements Runnable{
 	public void run(){
 		init();
 
-		int fps = 30; // Sets a constant fps for the game regardless of computer processing speed
+		int fps = 25; // Sets a constant fps for the game regardless of computer processing speed
 
 		double timePerTick = 1000000000/fps;
 		double delta = 0;
@@ -99,13 +99,13 @@ public class Game implements Runnable{
 		
 		p = new Player(this, 3, 3);
 		
-		p.setPlayerInfo("./res/player.txt");
+		p.setPlayerInfo(FileIO.PLAYER_INIT_INFO);
 		
 		output = new Output(this);
 		output.setPlayer(p);
 		output.init_header();
 		
-		output.setMap("./res/maps/map1.txt");
+		output.setMap(FileIO.MAP1_MAP);
 		map = output.getMap();
 		
 	}
@@ -139,6 +139,7 @@ public class Game implements Runnable{
 		
 		output.setGraphics(g);
 		
+		output.init_header();
 		output.renderHeader();
 		output.setMap("D:/Documents/Github/Sanitarium/Sanitarium/res/maps/map1.txt");
 		

@@ -22,3 +22,7 @@
 1449132733469	Extract method 'renderThrow'
 1449134797243	Move compilation unit
 1449153134319	Extract method 'renderThrowHelp'
+1449166833031	Extract method 'renderPotions'
+1449166874332	Extract method 'updatePatrol'
+1449167652464	Extract method 'updateWander'
+1449168515457	Extract method 'updateFiring'
